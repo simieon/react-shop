@@ -20,8 +20,16 @@ public class HomeController {
     }
 
     @DeleteMapping("/")
-    public void del(@RequestBody int c){
-        list.remove(list.get(c));
+    public void del(@RequestBody int idx){
+        int i = 0;
+        for (CategoryDTO item: list) {
+            if(item.getId()==idx)
+            {
+                break;
+            }
+            ++i;
+        }
+        list.remove(list.get(i));
     }
 
     @PutMapping("/")
