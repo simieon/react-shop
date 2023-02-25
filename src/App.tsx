@@ -8,6 +8,9 @@ import { Route, Routes } from 'react-router-dom';
 import DefaultLayout from './components/containers/default';
 import Login from './components/login';
 import Registration from './components/registration';
+import NotFoundPage from './components/not_found';
+import AddCategory from './components/AddCategory';
+import Add from './components/AddCategory';
 const App = () => {
 
   useEffect(() => {
@@ -31,12 +34,24 @@ const App = () => {
           {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit
                 routes for. */}
-          {/* <Route path="*" element={<NoMatch />} /> */}
+          <Route path="*" element={<NotFoundPage/>} />
         </Route>
         
         <Route path="/" element={<DefaultLayout />}>
           <Route index element={<Home />} />
           <Route path="registration" element={<Registration />} />
+          {/* <Route path="about" element={<About />} />
+          <Route path="dashboard" element={<Dashboard />} /> */}
+
+          {/* Using path="*"" means "match anything", so this route
+                acts like a catch-all for URLs that we don't have explicit
+                routes for. */}
+          {/* <Route path="*" element={<NoMatch />} /> */}
+        </Route>
+
+        <Route path="/" element={<DefaultLayout />}>
+          <Route index element={<Home />} />
+          <Route path="addcategory" element={<AddCategory />} />
           {/* <Route path="about" element={<About />} />
           <Route path="dashboard" element={<Dashboard />} /> */}
 
