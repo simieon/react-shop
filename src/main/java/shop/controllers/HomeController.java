@@ -1,49 +1,35 @@
 package shop.controllers;
-
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import shop.dto.CategoryDTO;
-import shop.repositories.CategoryRepository;
+import shop.dto.UploadImageDTO;
+import shop.storage.StorageService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 @RestController
+@AllArgsConstructor
 public class HomeController {
-    private static List<CategoryDTO> list = new ArrayList<CategoryDTO>();
-    @GetMapping("/")
-    public List<CategoryDTO> index(){
-        return list;
+    private final StorageService storageService;
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serverfile(@PathVariable String filename) throws Exception {
+        Resource file = storageService.loadAsResource(filename);
+        String urlFileName = URLEncoder.encode("Це прикольна дівчина.jpg", StandardCharsets.UTF_8);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=\""+urlFileName+"\"")
+                .body(file);
     }
 
-    @PostMapping("/")
-    public void add(@RequestBody CategoryDTO c){
-        list.add(c);
-    }
-
-    @DeleteMapping("/")
-    public void del(@RequestBody int idx){
-        int i = 0;
-        for (CategoryDTO item: list) {
-            if(item.getId()==idx)
-            {
-                break;
-            }
-            ++i;
-        }
-        list.remove(list.get(i));
-    }
-
-    @PutMapping("/")
-    public void update(@RequestBody CategoryDTO c){
-        int idx = 0;
-        for (CategoryDTO item: list) {
-            if(item.getId()==c.getId())
-            {
-                break;
-            }
-            ++idx;
-        }
-        list.get(idx).setName(c.getName());
+    @PostMapping("/upload")
+    public String upload(@RequestBody UploadImageDTO dto){
+        String filename = storageService.save(dto.getBase64());
+        return filename;
     }
 }

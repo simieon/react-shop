@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shop.dto.category.CategoryItemDTO;
 import shop.dto.category.CreateCategoryDTO;
-import shop.dto.category.UpdateCategoryDTO;
 import shop.entities.CategoryEntity;
+import shop.mapper.CategoryMapper;
 import shop.repositories.CategoryRepository;
+import shop.storage.StorageService;
 
 import java.util.List;
 
@@ -17,21 +19,24 @@ import java.util.List;
 @RequestMapping("api/categories")
 public class CategoryController {
     private final CategoryRepository categoryRepository;
-
+    private final CategoryMapper categoryMapper;
+    private final StorageService storageService;
     @GetMapping
-    public ResponseEntity<List<CategoryEntity>> index() {
+    public ResponseEntity<List<CategoryItemDTO>> index() {
         var list = categoryRepository.findAll();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        var model = categoryMapper.CategoryItemDTOsByCategories(list);
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CategoryEntity> create(@RequestBody CreateCategoryDTO model) {
-        CategoryEntity category = new CategoryEntity();
-        category.setName(model.getName());
-        category.setImage((model.getImage()));
-        category.setDescription((model.getDescription()));
+    public ResponseEntity<CategoryItemDTO> create(@RequestBody CreateCategoryDTO model) {
+        var filename = storageService.save(model.getImage());
+        CategoryEntity category = categoryMapper.categoryByCategoryCreateDTO(model);
+
+        category.setImage(filename);
         categoryRepository.save(category);
-        return new ResponseEntity<>(category, HttpStatus.CREATED);
+        var result = categoryMapper.CategoryItemDTOByCategory(category);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
     @GetMapping("{id}")
     public ResponseEntity<CategoryEntity> get(@PathVariable("id") int categoryId){
