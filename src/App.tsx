@@ -9,8 +9,9 @@ import DefaultLayout from './components/containers/default';
 import Login from './components/login';
 import Registration from './components/registration';
 import NotFoundPage from './components/not_found';
-import AddCategory from './components/AddCategory';
-import Add from './components/AddCategory';
+import AddCategory from './components/categories/create';
+import Add from './components/categories/create';
+import CategoryCreatePage from './components/categories/create';
 const App = () => {
 
   useEffect(() => {
@@ -27,7 +28,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<DefaultLayout />}>
           <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
+          <Route path="login" element={<Login />} /> 
+          <Route path="registration" element={<Registration />} />
+          <Route path="categories/create" element={<CategoryCreatePage />} />
           {/* <Route path="about" element={<About />} />
           <Route path="dashboard" element={<Dashboard />} /> */}
 
@@ -35,30 +38,6 @@ const App = () => {
                 acts like a catch-all for URLs that we don't have explicit
                 routes for. */}
           <Route path="*" element={<NotFoundPage/>} />
-        </Route>
-        
-        <Route path="/" element={<DefaultLayout />}>
-          <Route index element={<Home />} />
-          <Route path="registration" element={<Registration />} />
-          {/* <Route path="about" element={<About />} />
-          <Route path="dashboard" element={<Dashboard />} /> */}
-
-          {/* Using path="*"" means "match anything", so this route
-                acts like a catch-all for URLs that we don't have explicit
-                routes for. */}
-          {/* <Route path="*" element={<NoMatch />} /> */}
-        </Route>
-
-        <Route path="/" element={<DefaultLayout />}>
-          <Route index element={<Home />} />
-          <Route path="addcategory" element={<AddCategory />} />
-          {/* <Route path="about" element={<About />} />
-          <Route path="dashboard" element={<Dashboard />} /> */}
-
-          {/* Using path="*"" means "match anything", so this route
-                acts like a catch-all for URLs that we don't have explicit
-                routes for. */}
-          {/* <Route path="*" element={<NoMatch />} /> */}
         </Route>
       </Routes>
     </>

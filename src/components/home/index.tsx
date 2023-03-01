@@ -51,22 +51,23 @@ const Home = () => {
     <>
       <div className="bg-gray-100">
         <div className ="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-               <div style={{width:200}}>
-                <Link
-                  to="/addcategory"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                >
-                  Add New Category
-                </Link>
-              </div>
-          <h2 className="text-2xl font-bold text-gray-900">Collections</h2>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+               
+          <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
+          <div className="my-4">
+              <Link
+                to="categories/create"
+                className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50"
+              >
+                Add New Category
+              </Link>
+            </div>
           <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
           {list.map((category) => (
               <div key={category.id} className="group relative">
                 <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
                   <img
-                    src={"http://localhost:8083/files/"+category.image}
+                    src={"http://localhost:8083/files/600_"+category.image}
                     alt={category.name}
                     className="h-full w-full object-cover object-center"
                   />
