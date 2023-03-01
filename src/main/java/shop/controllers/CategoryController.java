@@ -55,7 +55,10 @@ public class CategoryController {
         {
             var cat = catOptional.get();
             cat.setName(model.getName());
-            cat.setImage((model.getImage()));
+            storageService.removeFile(cat.getImage());
+            var filename = storageService.save(model.getImage());
+            cat.setImage(filename);
+
             cat.setDescription((model.getDescription()));
             categoryRepository.save(cat);
             return new ResponseEntity<>(cat, HttpStatus.OK);
@@ -65,7 +68,9 @@ public class CategoryController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int categoryId) {
+        CategoryEntity category = categoryRepository.findById(categoryId).get();
+        storageService.removeFile(category.getImage());
         categoryRepository.deleteById(categoryId);
-        return new ResponseEntity<>("Категорію видалено", HttpStatus.OK);
+        return new ResponseEntity<>("Катагорія знищена.", HttpStatus.OK);
     }
 }
