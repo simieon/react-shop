@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import shop.dto.category.CategoryItemDTO;
 import shop.dto.category.CreateCategoryDTO;
 import shop.entities.CategoryEntity;
+import shop.interfaces.CategoryService;
 import shop.mapper.CategoryMapper;
 import shop.repositories.CategoryRepository;
 import shop.storage.StorageService;
@@ -21,56 +22,41 @@ public class CategoryController {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final StorageService storageService;
+    private final CategoryService categoryService;
     @GetMapping
     public ResponseEntity<List<CategoryItemDTO>> index() {
-        var list = categoryRepository.findAll();
-        var model = categoryMapper.CategoryItemDTOsByCategories(list);
-        return new ResponseEntity<>(model, HttpStatus.OK);
+        var result = categoryService.get();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<CategoryItemDTO> create(@RequestBody CreateCategoryDTO model) {
-        var filename = storageService.save(model.getImage());
-        CategoryEntity category = categoryMapper.categoryByCategoryCreateDTO(model);
-
-        category.setImage(filename);
-        categoryRepository.save(category);
-        var result = categoryMapper.CategoryItemDTOByCategory(category);
+        var result = categoryService.create(model);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
     @GetMapping("{id}")
-    public ResponseEntity<CategoryEntity> get(@PathVariable("id") int categoryId){
-        var catOptional = categoryRepository.findById(categoryId);
-        if(catOptional.isPresent()){
-            return new ResponseEntity<>(catOptional.get(), HttpStatus.OK);
+    public ResponseEntity<CategoryItemDTO> get(@PathVariable("id") int categoryId) {
+        var result = categoryService.get(categoryId);
+        if(result!=null)
+        {
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<CategoryEntity> update(@PathVariable("id") int categoryId,
+    public ResponseEntity<CategoryItemDTO> update(@PathVariable("id") int categoryId,
                                                  @RequestBody CreateCategoryDTO model) {
-        var catOptional = categoryRepository.findById(categoryId);
-        if(catOptional.isPresent())
-        {
-            var cat = catOptional.get();
-            cat.setName(model.getName());
-            storageService.removeFile(cat.getImage());
-            var filename = storageService.save(model.getImage());
-            cat.setImage(filename);
-
-            cat.setDescription((model.getDescription()));
-            categoryRepository.save(cat);
-            return new ResponseEntity<>(cat, HttpStatus.OK);
+        var result = categoryService.update(categoryId, model);
+        if(result!=null) {
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int categoryId) {
-        CategoryEntity category = categoryRepository.findById(categoryId).get();
-        storageService.removeFile(category.getImage());
-        categoryRepository.deleteById(categoryId);
+        categoryService.delete(categoryId);
         return new ResponseEntity<>("Катагорія знищена.", HttpStatus.OK);
     }
 }
