@@ -1,19 +1,10 @@
 package shop.dto.category;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
+@Data
 public class CreateCategoryDTO {
     private String name;
-    private String image;
+    private MultipartFile file;
     private String description;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

@@ -26,7 +26,7 @@ public class CategoryServiceImplement implements CategoryService {
 
     @Override
     public CategoryItemDTO create(CreateCategoryDTO model) {
-        var filename = storageService.save(model.getImage());
+        var filename = storageService.saveMultipartFile(model.getFile());
         CategoryEntity category = categoryMapper.categoryByCategoryCreateDTO(model);
 
         category.setImage(filename);
@@ -49,7 +49,7 @@ public class CategoryServiceImplement implements CategoryService {
             var cat = catOptional.get();
             cat.setName(model.getName());
             storageService.removeFile(cat.getImage());
-            var filename = storageService.save(model.getImage());
+            var filename = storageService.save("");
             cat.setImage(filename);
 
             cat.setDescription((model.getDescription()));
