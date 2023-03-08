@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import LockClosedIcon from "@heroicons/react/24/outline/LockClosedIcon";
 import { Link } from "react-router-dom";
+import { APP_ENV } from "../../env";
 
 const callouts = [
   {
@@ -39,10 +40,10 @@ const Home = () => {
 
   const[list,setList] = useState<ICategoryItem[]>([]);
   useEffect(() => {
-    axios.get<ICategoryItem[]>("http://localhost:8083/api/categories")
+    axios.get<ICategoryItem[]>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`) //запит на сервер
       .then(resp => {
-        const list = resp.data;
-        setList(resp.data);
+        //const list = resp.data;
+        setList(resp.data); //ми змінуємо список на ті дані, які прийшли із сервер
         console.log("Resp server ", resp);
       });
   
@@ -67,7 +68,7 @@ const Home = () => {
               <div key={category.id} className="group relative">
                 <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
                   <img
-                    src={"http://localhost:8083/files/600_"+category.image}
+                    src={`${APP_ENV.REMOTE_HOST_NAME}files/600_`+category.image}
                     alt={category.name}
                     className="h-full w-full object-cover object-center"
                   />

@@ -10,7 +10,7 @@ const CategoryCreatePage = () => {
 
     const[model,setModel]= useState<ICategoryCreate>({
         name:"",
-        image:"",
+        file:null,
         description:""
     });
 
@@ -24,14 +24,7 @@ const CategoryCreatePage = () => {
         const{files} = target;
         if(files){
             const file = files[0];
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload=(readFile)=>{
-                const result = readFile.target?.result as string;
-                console.log("Read file: ", result);
-
-                setModel({...model, "image":result});
-            }
+            setModel({...model, file});
         }
         target.value="";
     }
@@ -39,7 +32,12 @@ const CategoryCreatePage = () => {
     const onSubmitHandler= async(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         try{
-            await axios.post("http://localhost:8083/api/categories",model).then(resp => {
+            await axios.post("http://localhost:8083/api/categories",model, {
+              headers:{
+                "Content-Type":"multipart/form-data"
+              }
+            })
+            .then(resp => {
             console.log("Server result", resp);})
             nav("/");
         }
@@ -103,7 +101,7 @@ const CategoryCreatePage = () => {
                   htmlFor="selectImage"
                   className="inline-block w-20 overflow-hidden bg-gray-100"
                 >
-                  {model.image === "" ? (
+                  {model.file === null ? (
                     <svg
                       className="h-full w-full text-gray-300"
                       fill="currentColor"
@@ -112,7 +110,7 @@ const CategoryCreatePage = () => {
                       <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                   ) : (
-                    <img src={model.image} />
+                    <img src={URL.createObjectURL(model.file)} />
                   )}
                 </label>
                 <label
@@ -131,8 +129,8 @@ const CategoryCreatePage = () => {
           </div>
           <div className="space-x-4 mt-8">
             <button 
-              title={(model.name=="" || model.description=="" || model.image=="")?"All fields must be filled":""}
-              disabled = {model.name=="" || model.description=="" || model.image==""}
+              title={(model.name==="" || model.description==="" || model.file===null)?"All fields must be filled":""}
+              disabled = {model.name==="" || model.description==="" || model.file===null}
               type="submit"
               className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50"
             >

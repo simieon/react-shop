@@ -1,5 +1,5 @@
 export interface ICategoryCreate{
     name:string,
-    image:string,
+    file:File|null,
     description:string
 };

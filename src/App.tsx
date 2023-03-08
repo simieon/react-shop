@@ -12,6 +12,7 @@ import NotFoundPage from './components/not_found';
 import AddCategory from './components/categories/create';
 import Add from './components/categories/create';
 import CategoryCreatePage from './components/categories/create';
+import ProductCreatePage from './components/products/create/ProductCreatePage';
 const App = () => {
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="login" element={<Login />} /> 
           <Route path="registration" element={<Registration />} />
           <Route path="categories/create" element={<CategoryCreatePage />} />
+          <Route path="products/create" element={<ProductCreatePage />} />
           {/* <Route path="about" element={<About />} />
           <Route path="dashboard" element={<Dashboard />} /> */}
 
