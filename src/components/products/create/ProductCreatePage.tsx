@@ -1,10 +1,37 @@
 import axios from "axios";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ReactSelect from "react-select";
+import { GroupBase } from "react-select/dist/declarations/src";
 import { APP_ENV } from "../../../env";
 import { IProductCreate } from "../types";
 
+interface ICategoryItem{
+    id:number,
+    name:string, 
+    image:string,
+    description:string
+  }
+
 const ProductCreatePage = () => {
+    const[catIdList, setCatList] = useState<any[]>([])
+    var [options, setOptions] = useState<any[]>([]);
+
+    useEffect(() => {
+        axios.get<ICategoryItem[]>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`) //запит на сервер
+        .then(resp => {
+            setCatList([])
+            console.log("Resp server ", resp);
+            resp.data.forEach(e => {
+              let id = e.id.toString()
+              catIdList.push({value: id, label:id})
+            });
+            setOptions(catIdList);
+            console.log("options :", options);
+            
+        });
+    
+    }, []);
     const navigator = useNavigate();
 
     const [model, setModel] = useState<IProductCreate>({
@@ -18,6 +45,12 @@ const ProductCreatePage = () => {
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>| ChangeEvent<HTMLTextAreaElement>) => {
         //console.log(e.target.name, e.target.value);
         setModel({...model, [e.target.name]: e.target.value});
+    }
+
+    const onChangeSelect = (selected:any)=>{
+        setModel({...model, "category_id":selected.value as number})
+        console.log(model);
+        
     }
 
     const onFileHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +86,10 @@ const ProductCreatePage = () => {
     const dataFileView = model.files.map((file,index)=>
         <img key={index} src={URL.createObjectURL(file)}/>
     );
+
+    const buttonClearImages = () =>{
+        setModel({...model, files: []});
+    }
 
   return (
     <>
@@ -103,7 +140,7 @@ const ProductCreatePage = () => {
               >
                 Категорія
               </label>
-              <input
+              {/* <input
                 type="text"
                 name="category_id"
                 onChange={onChangeHandler}
@@ -111,8 +148,14 @@ const ProductCreatePage = () => {
                 id="category_id"
                 className="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full"
                 placeholder="Вкажіть id категорії"
-              />
+              /> */}
+              <ReactSelect
+              options={options}
+              name="category_id"
+              onChange={onChangeSelect}
+              id="category_id"></ReactSelect>
             </div>
+
 
             <div>
               <label
@@ -153,6 +196,14 @@ const ProductCreatePage = () => {
                 >
                   Обрати фото
                 </label>
+
+                <button className="ml-5 rounded-md border border-gray-300 bg-white 
+                        py-2 px-3 text-sm font-medium leading-4 text-gray-700 
+                        shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 
+                        focus:ring-indigo-500 focus:ring-offset-2"
+                        onClick={buttonClearImages}>
+                    Очистити
+                </button>
               </div>
 
               <input
