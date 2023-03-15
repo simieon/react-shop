@@ -1,4 +1,4 @@
-import CategoryCreatePage from "../../categories/create";
+import ProductCreatePage from "./ProductCreatePage";
 
 
-export default CategoryCreatePage;
+export default ProductCreatePage;

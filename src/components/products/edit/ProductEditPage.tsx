@@ -1,13 +1,15 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import ReactSelect from "react-select";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { APP_ENV } from "../../../env";
 import { ICategoryItem } from "../../home/types";
-import { IProductCreate } from "../types";
+import { IProductCreate, IProductEdit, IProductItem } from "../types";
+import { FaTrash } from "react-icons/fa";
 
-const ProductCreatePage = () => {
+const ProductEditPage = () => {
+    const [oldImages, setOldImages] = useState<string[]>([]);
     const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
+    const {id} = useParams();
 
     useEffect(() => {
       axios
@@ -16,15 +18,24 @@ const ProductCreatePage = () => {
           console.log("resp = ", resp);
           setCategories(resp.data);
         });
+      axios
+      .get<IProductItem>(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
+      .then((resp) => {
+        const {files, name, price, category_id, description} = resp.data;
+        setOldImages(files);
+        setModel({...model, name, price, description, category_id});
+        console.log("data", resp.data);
+      });
     }, []);
 
     const navigator = useNavigate();
 
-    const [model, setModel] = useState<IProductCreate>({
+    const [model, setModel] = useState<IProductEdit>({
         name: "",
         price: 0,
-        category_id: 2,
+        category_id: "",
         description: "",
+        removeFiles:[],
         files: []
     });
     
@@ -45,23 +56,23 @@ const ProductCreatePage = () => {
     }
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            const item = await axios
-              .post(`${APP_ENV.REMOTE_HOST_NAME}api/products`, 
-                model, 
-                {
-                  headers: {
-                    "Content-Type": "multipart/form-data"
-                  }
-                });
-            console.log("Server save category", item);
-            navigator("/");
-        }catch(error: any) {
-            console.log("Щось пішло не так", error);
-        }
-        
-    }
+      e.preventDefault();
+      try {
+        const item = await axios.put(
+          `${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`,
+          model,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Server save category", item);
+        navigator("/");
+      } catch (error: any) {
+        console.log("Щось пішло не так", error);
+      }
+    };
 
     const dataFileView = model.files.map((file,index)=>
         <img key={index} src={URL.createObjectURL(file)}/>
@@ -73,6 +84,31 @@ const ProductCreatePage = () => {
 
     const contentCategories = categories.map((category) => (
       <option key={category.id} value={category.id}>{category.name}</option>
+    ));
+
+    const DeleteProductOldImagesHandler = (imageSrc: string) => {
+      setModel({...model, removeFiles: [...model.removeFiles, imageSrc]});
+      setOldImages(oldImages.filter(x=>x!==imageSrc));
+    };
+  
+    const DataProductsOld = oldImages.map((product, index) => (
+      <div key={index} className="inline  m-2 ">
+        <div
+          style={{ cursor: "pointer" }}
+          className="flex justify-center ... border-2 border-black  rounded-lg ... "
+          onClick={(e) => {
+            DeleteProductOldImagesHandler(product);
+          }}
+        >
+          <FaTrash className="m-2 " />
+        </div>
+        <div className="p-2">
+          <img
+            className=" w-20 h-20 "
+            src={`${APP_ENV.REMOTE_HOST_NAME}files/600_${product}`}
+          ></img>
+        </div>
+      </div>
     ));
   return (
     <>
@@ -124,12 +160,12 @@ const ProductCreatePage = () => {
                 Select Category
               </label>
               <select
+                value={model.category_id}
                 onChange={onChangeHandler}
                 id="category_id"
                 name="category_id"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option hidden selected>Select Category</option>
                 {contentCategories}
               </select>
             </div>
@@ -184,6 +220,12 @@ const ProductCreatePage = () => {
                 </button>
               </div>
 
+              <div className="mt-1 flex items-center">
+                <label className="flex ">
+                  <>{DataProductsOld}</>
+                </label>
+              </div>
+
               <input
                 type="file"
                 id="selectImage"
@@ -197,7 +239,7 @@ const ProductCreatePage = () => {
               type="submit"
               className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50"
             >
-              Add
+              Edit
             </button>
             <Link
               to="/"
@@ -212,4 +254,4 @@ const ProductCreatePage = () => {
   );
 };
 
-export default ProductCreatePage;
+export default ProductEditPage;

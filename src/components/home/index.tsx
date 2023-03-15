@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import LockClosedIcon from "@heroicons/react/24/outline/LockClosedIcon";
 import { Link } from "react-router-dom";
 import { APP_ENV } from "../../env";
+import { ICategoryItem } from "./types";
 
 const callouts = [
   {
@@ -28,12 +29,7 @@ const callouts = [
   },
 ]
 
-interface ICategoryItem{
-  id:number,
-  name:string, 
-  image:string,
-  description:string
-}
+
 
 
 const Home = () => {
