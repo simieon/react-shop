@@ -79,6 +79,15 @@ public class ProductServiceImplement implements ProductService {
         }
         return null;
     }
+
+    @Override
+    public void delete(int id) {
+        ProductEntity product = productRepository.findById(id).get();
+        for(var img : product.getProductImages())
+            storageService.removeFile(img.getName());;
+        productRepository.deleteById(id);
+    }
+
     @Override
     public ProductItemDTO edit(int id, ProductEditDTO model) {
         var p = productRepository.findById(id);
