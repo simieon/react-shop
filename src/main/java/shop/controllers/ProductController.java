@@ -21,26 +21,30 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductItemDTO>> index() {
+    public ResponseEntity<List<ProductItemDTO>> index() throws InterruptedException {
         var result = productService.get();
+        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProductItemDTO> create(@Valid @ModelAttribute ProductCreateDTO model) {
+    public ResponseEntity<ProductItemDTO> create(@Valid @ModelAttribute ProductCreateDTO model) throws InterruptedException {
         var result = productService.create(model);
+        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping(value = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductItemDTO> edit(@PathVariable("id") int id,
-                                               @Valid @ModelAttribute ProductEditDTO model) {
+                                               @Valid @ModelAttribute ProductEditDTO model) throws InterruptedException {
         var result = productService.edit(id, model);
+        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ProductItemDTO> getProductById(@PathVariable("id") int id) {
+    public ResponseEntity<ProductItemDTO> getProductById(@PathVariable("id") int id) throws InterruptedException {
         var product = productService.getById(id);
+        Thread.sleep(2000);
         if(product!=null)
         {
             return new ResponseEntity<>(product, HttpStatus.OK);
@@ -49,8 +53,9 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") int productId) {
+    public ResponseEntity<String> delete(@PathVariable("id") int productId) throws InterruptedException {
         productService.delete(productId);
+        Thread.sleep(2000);
         return new ResponseEntity<>("Продукт знищено.", HttpStatus.OK);
     }
 }
