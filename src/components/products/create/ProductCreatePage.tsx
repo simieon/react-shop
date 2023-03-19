@@ -4,17 +4,25 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactSelect from "react-select";
 import { APP_ENV } from "../../../env";
 import { ICategoryItem } from "../../home/types";
+import Loader from "../../Loader";
 import { IProductCreate } from "../types";
 
 const ProductCreatePage = () => {
     const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+      setIsLoading(true);
       axios
         .get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`)
         .then((resp) => {
           console.log("resp = ", resp);
           setCategories(resp.data);
+          setIsLoading(false);
+        })
+        .catch(err=>{
+          setIsLoading(false);
+          console.log(err);
         });
     }, []);
 
@@ -56,11 +64,10 @@ const ProductCreatePage = () => {
                   }
                 });
             console.log("Server save category", item);
-            navigator("/");
+            navigator("/products/list");
         }catch(error: any) {
             console.log("Щось пішло не так", error);
         }
-        
     }
 
     const dataFileView = model.files.map((file,index)=>
@@ -75,6 +82,8 @@ const ProductCreatePage = () => {
       <option key={category.id} value={category.id}>{category.name}</option>
     ));
   return (
+    isLoading ? <Loader loading={isLoading}/> 
+    :
     <>
       <div className="p-8 rounded border border-gray-200">
         <h1 className="font-medium text-3xl">Add product</h1>

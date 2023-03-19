@@ -5,18 +5,27 @@ import { APP_ENV } from "../../../env";
 import { ICategoryItem } from "../../home/types";
 import { IProductCreate, IProductEdit, IProductItem } from "../types";
 import { FaTrash } from "react-icons/fa";
+import Loader from "../../Loader";
 
 const ProductEditPage = () => {
     const [oldImages, setOldImages] = useState<string[]>([]);
     const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
     const {id} = useParams();
+    const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => {
+      setIsLoading(true);
       axios
         .get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`)
         .then((resp) => {
           console.log("resp = ", resp);
           setCategories(resp.data);
+          setIsLoading(false);
+        })
+        .catch(err=>{
+          console.log(err);
+          setIsLoading(false);
         });
       axios
       .get<IProductItem>(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
@@ -26,6 +35,7 @@ const ProductEditPage = () => {
         setModel({...model, name, price, description, category_id});
         console.log("data", resp.data);
       });
+      
     }, []);
 
     const navigator = useNavigate();
@@ -57,6 +67,7 @@ const ProductEditPage = () => {
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      setIsLoading(true);
       try {
         const item = await axios.put(
           `${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`,
@@ -66,12 +77,17 @@ const ProductEditPage = () => {
               "Content-Type": "multipart/form-data",
             },
           }
-        );
+        )
+        .then(()=>{
+          setIsLoading(false);
+        })
         console.log("Server save category", item);
         navigator("/");
       } catch (error: any) {
         console.log("Щось пішло не так", error);
+        setIsLoading(false);
       }
+      
     };
 
     const dataFileView = model.files.map((file,index)=>
@@ -111,6 +127,8 @@ const ProductEditPage = () => {
       </div>
     ));
   return (
+    isLoading ? <Loader loading={isLoading}/> 
+    :
     <>
       <div className="p-8 rounded border border-gray-200">
         <h1 className="font-medium text-3xl">Add product</h1>

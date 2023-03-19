@@ -3,10 +3,12 @@ import { read } from "fs";
 import { validateHeaderValue } from "http";
 import React, { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Loader from "../../Loader";
 import { ICategoryCreate } from "../types";
 
 const CategoryCreatePage = () => {
     const nav = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     const[model,setModel]= useState<ICategoryCreate>({
         name:"",
@@ -31,6 +33,7 @@ const CategoryCreatePage = () => {
 
     const onSubmitHandler= async(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
+        setIsLoading(true);
         try{
             await axios.post("http://localhost:8083/api/categories",model, {
               headers:{
@@ -45,10 +48,12 @@ const CategoryCreatePage = () => {
             console.log("something went wrong");
             
         }
-        
+        setIsLoading(false);
     }
 
   return (
+    isLoading ? <Loader loading={isLoading}/> 
+    :
     <>
       <div className="p-8 rounded border border-gray-200">
         <h1 className="font-medium text-3xl">Add New Category</h1>
