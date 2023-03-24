@@ -27,20 +27,17 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryItemDTO>> index() throws InterruptedException {
         var result = categoryService.get();
-        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CategoryItemDTO> create(@ModelAttribute CreateCategoryDTO model) throws InterruptedException {
         var result = categoryService.create(model);
-        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
     @GetMapping("{id}")
     public ResponseEntity<CategoryItemDTO> get(@PathVariable("id") int categoryId) throws InterruptedException {
         var result = categoryService.get(categoryId);
-        Thread.sleep(2000);
         if(result!=null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -52,7 +49,6 @@ public class CategoryController {
     public ResponseEntity<CategoryItemDTO> update(@PathVariable("id") int categoryId,
                                                  @RequestBody CreateCategoryDTO model) throws InterruptedException {
         var result = categoryService.update(categoryId, model);
-        Thread.sleep(2000);
         if(result!=null) {
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
@@ -62,7 +58,6 @@ public class CategoryController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int categoryId) throws InterruptedException {
         categoryService.delete(categoryId);
-        Thread.sleep(2000);
         return new ResponseEntity<>("Катагорія знищена.", HttpStatus.OK);
     }
 }

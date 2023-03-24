@@ -23,13 +23,11 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductItemDTO>> index() throws InterruptedException {
         var result = productService.get();
-        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductItemDTO> create(@Valid @ModelAttribute ProductCreateDTO model) throws InterruptedException {
         var result = productService.create(model);
-        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -37,14 +35,12 @@ public class ProductController {
     public ResponseEntity<ProductItemDTO> edit(@PathVariable("id") int id,
                                                @Valid @ModelAttribute ProductEditDTO model) throws InterruptedException {
         var result = productService.edit(id, model);
-        Thread.sleep(2000);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<ProductItemDTO> getProductById(@PathVariable("id") int id) throws InterruptedException {
         var product = productService.getById(id);
-        Thread.sleep(2000);
         if(product!=null)
         {
             return new ResponseEntity<>(product, HttpStatus.OK);
@@ -55,7 +51,6 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int productId) throws InterruptedException {
         productService.delete(productId);
-        Thread.sleep(2000);
         return new ResponseEntity<>("Продукт знищено.", HttpStatus.OK);
     }
 }
