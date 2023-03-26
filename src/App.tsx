@@ -6,8 +6,8 @@ import Home from './components/home';
 import DefaultHeader from './components/containers/default/DefaultHeader';
 import { Route, Routes } from 'react-router-dom';
 import DefaultLayout from './components/containers/default';
-import Login from './components/login';
-import Registration from './components/registration';
+import Login from './components/auth/login';
+import Registration from './components/auth/registration';
 import NotFoundPage from './components/not_found';
 import AddCategory from './components/categories/create';
 import Add from './components/categories/create';
@@ -15,6 +15,7 @@ import CategoryCreatePage from './components/categories/create';
 import ProductCreatePage from './components/products/create/ProductCreatePage';
 import ProductListPage from './components/products/list';
 import ProductEditPage from './components/products/edit';
+import ProductItemPage from './components/item/ProductItemPage';
 const App = () => {
 
   useEffect(() => {
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="products/create" element={<ProductCreatePage />} />
           <Route path="products/list" element={<ProductListPage />} />
           <Route path="products/edit/:id" element={<ProductEditPage />} />
+          <Route path="products/view/:id" element={<ProductItemPage />} />
           {/* <Route path="about" element={<About />} />
           <Route path="dashboard" element={<Dashboard />} /> */}
 

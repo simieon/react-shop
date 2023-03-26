@@ -11,6 +11,7 @@ export interface IProductItem {
     name: string,
     files: string[],
     price: number,
+    category:string,
     category_id:string,
     description: string
 }
