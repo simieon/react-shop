@@ -1,62 +1,84 @@
 import axios from "axios";
-import { read } from "fs";
-import { validateHeaderValue } from "http";
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Loader from "../../Loader";
 import { ICategoryCreate } from "../types";
+import http from "../../../../http_common";
 
-const CategoryCreatePage = () => {
-    const nav = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
+// interface IWoman {
+//   name: string,
+//   age: number,
+//   phone: string
+// }
 
-    const[model,setModel]= useState<ICategoryCreate>({
-        name:"",
-        file:null,
-        description:""
+const AdminCategoryCreatePage = () => {
+
+    const navigator = useNavigate();
+
+    const [model, setModel] = useState<ICategoryCreate>({
+        name: "",
+        description: "",
+        file: null
+        //base64: ""
     });
-
+    
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>| ChangeEvent<HTMLTextAreaElement>) => {
-        setModel({...model, [e.target.name]:e.target.value});
+        //console.log(e.target.name, e.target.value);
+        setModel({...model, [e.target.name]: e.target.value});
     }
 
-    const onFileHandler = (e: ChangeEvent<HTMLInputElement>)=>{
-        console.log("selected  files: ", e.target.files);
-        const{target} = e;
-        const{files} = target;
-        if(files){
+    const onFileHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        //console.log("Select files: ", e.target.files);
+        const {target} = e;
+        const {files} = target;
+        if(files) {
             const file = files[0];
             setModel({...model, file});
+            // const fileReader = new FileReader();
+            // fileReader.readAsDataURL(file);
+            // fileReader.onload=(readFile) => {
+            //     const result = readFile.target?.result as string;
+            //     //console.log("Read File", result);
+            //     setModel({...model, "base64": result});
+            // }
         }
         target.value="";
     }
 
-    const onSubmitHandler= async(e:React.FormEvent<HTMLFormElement>)=>{
+    const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsLoading(true);
-        try{
-            await axios.post("http://localhost:8083/api/categories",model, {
-              headers:{
-                "Content-Type":"multipart/form-data"
-              }
-            })
-            .then(resp => {
-            console.log("Server result", resp);})
-            nav("/");
+        // let woman : IWoman = {
+        //   name: "Марина",
+        //   age: 48,
+        //   phone: "+3897 874 55 44"
+        // };
+        // console.log("Woman info ", woman);
+        // woman = {...woman, age: 34};
+        // console.log("Woman new age", woman);
+        // woman = {...woman, age: 18, name: "Ілона"};
+        // console.log("Woman new age and new name", woman);
+        
+
+        try {
+            const item = await http
+              .post("http://localhost:8083/api/categories", 
+                model, 
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data"
+                  }
+                });
+            console.log("Server save category", item);
+            navigator("/");
+        }catch(error: any) {
+            console.log("Щось пішло не так", error);
         }
-        catch(error:any){
-            console.log("something went wrong");
-            
-        }
-        setIsLoading(false);
+        
     }
 
   return (
-    isLoading ? <Loader loading={isLoading}/> 
-    :
     <>
       <div className="p-8 rounded border border-gray-200">
-        <h1 className="font-medium text-3xl">Add New Category</h1>
+        <h1 className="font-medium text-3xl">Додати категорію</h1>
 
         <form onSubmit={onSubmitHandler}>
           <div className="mt-8 grid lg:grid-cols-1 gap-4">
@@ -65,14 +87,14 @@ const CategoryCreatePage = () => {
                 htmlFor="name"
                 className="text-sm text-gray-700 block mb-1 font-medium"
               >
-                Name
+                Назва
               </label>
               <input
                 type="text"
                 name="name"
-                id="name"
                 onChange={onChangeHandler}
                 value={model.name}
+                id="name"
                 className="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full"
                 placeholder="Вкажіть назву категорії"
               />
@@ -83,7 +105,7 @@ const CategoryCreatePage = () => {
                 htmlFor="description"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Description
+                Опис
               </label>
               <textarea
                 id="description"
@@ -98,11 +120,11 @@ const CategoryCreatePage = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Image
+                Фото
               </label>
 
               <div className="mt-1 flex items-center">
-              <label
+                <label
                   htmlFor="selectImage"
                   className="inline-block w-20 overflow-hidden bg-gray-100"
                 >
@@ -125,27 +147,30 @@ const CategoryCreatePage = () => {
                         shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 
                         focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  Change
+                  Обрати фото
                 </label>
               </div>
 
-              <input type="file" id="selectImage" className="hidden" onChange={onFileHandler} />
+              <input
+                type="file"
+                id="selectImage"
+                onChange={onFileHandler}
+                className="hidden"
+              />
             </div>
           </div>
           <div className="space-x-4 mt-8">
-            <button 
-              title={(model.name==="" || model.description==="" || model.file===null)?"All fields must be filled":""}
-              disabled = {model.name==="" || model.description==="" || model.file===null}
+            <button
               type="submit"
               className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50"
             >
-              Add
+              Додати
             </button>
             <Link
               to="/"
               className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
             >
-              Home
+              На головну
             </Link>
           </div>
         </form>
@@ -154,4 +179,4 @@ const CategoryCreatePage = () => {
   );
 };
 
-export default CategoryCreatePage;
+export default AdminCategoryCreatePage;

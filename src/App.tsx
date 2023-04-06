@@ -1,21 +1,19 @@
 import React, { useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import Home from './components/home';
-import DefaultHeader from './components/containers/default/DefaultHeader';
 import { Route, Routes } from 'react-router-dom';
-import DefaultLayout from './components/containers/default';
 import Login from './components/auth/login';
 import Registration from './components/auth/registration';
 import NotFoundPage from './components/not_found';
-import AddCategory from './components/categories/create';
-import Add from './components/categories/create';
-import CategoryCreatePage from './components/categories/create';
 import ProductCreatePage from './components/products/create/ProductCreatePage';
 import ProductListPage from './components/products/list';
 import ProductEditPage from './components/products/edit';
 import ProductItemPage from './components/item/ProductItemPage';
+import DefaultLayout from './components/containers/default/DefaultLayout';
+import AdminCategoryCreatePage from './components/admin/categories/create/AdminCategoryCreatePage';
+import AdminHome from './components/admin/home';
+import AdminLayout from './components/containers/admin/AdminLayout';
 const App = () => {
 
   useEffect(() => {
@@ -34,7 +32,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} /> 
           <Route path="registration" element={<Registration />} />
-          <Route path="categories/create" element={<CategoryCreatePage />} />
+          <Route path="categories/create" element={<AdminCategoryCreatePage />} />
           <Route path="products/create" element={<ProductCreatePage />} />
           <Route path="products/list" element={<ProductListPage />} />
           <Route path="products/edit/:id" element={<ProductEditPage />} />
@@ -46,6 +44,11 @@ const App = () => {
                 acts like a catch-all for URLs that we don't have explicit
                 routes for. */}
           <Route path="*" element={<NotFoundPage/>} />
+        </Route>
+
+        <Route path="/admin" element={<AdminLayout/>}>
+          <Route index element={<AdminHome />} />
+          <Route path="categories/create" element={<AdminCategoryCreatePage />} />
         </Route>
       </Routes>
     </>

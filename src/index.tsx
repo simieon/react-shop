@@ -8,17 +8,15 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import { AuthUserActionType, IUser } from './components/auth/types';
 import jwtDecode from 'jwt-decode';
+import setAuthToken from './helpers/SetAuthToken';
+import { AuthUserToken } from './components/auth/action';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 if (localStorage.token) {
   const { token } = localStorage;
-  const user = jwtDecode(token) as IUser;
-  store.dispatch({
-    type: AuthUserActionType.LOGIN_USER,
-    payload: user,
-  });
+  AuthUserToken(token, store.dispatch);
 }
 
 root.render(

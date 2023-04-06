@@ -10,6 +10,8 @@ import { APP_ENV } from "../../../env";
 import { AuthUserActionType, IAuthResponse, ILogin, IUser } from "../types";
 import { useDispatch } from "react-redux";
 import jwtDecode from "jwt-decode";
+import { AuthUserToken } from "../action";
+import GoogleAuth from "../google/GoogleAuth";
 
 
 const LoginPage = () => {
@@ -36,19 +38,14 @@ const LoginPage = () => {
       //Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот  
       values.reCaptchaToken=await executeRecaptcha();
 
-      const data = await axios.post<IAuthResponse>(
+      const resp = await axios.post<IAuthResponse>(
         `${APP_ENV.REMOTE_HOST_NAME}account/login`,
         values
       );
+      
+      AuthUserToken(resp.data.token, dispatch);
 
-      const {token} = data.data;
-      localStorage.token = token;
-      const user = jwtDecode(token) as IUser;
-      dispatch({
-        type:AuthUserActionType.LOGIN_USER,
-        payload:user
-      });
-      console.log("Login user token", data);
+      console.log("Login user token", resp);
       navigator("/");
     } catch (error: any) {
       console.log("Щось пішло не так", error);
@@ -74,7 +71,7 @@ const LoginPage = () => {
 
         <div className="flex justify-center py-10 ">
           <form className="max-w-[400px] w-full mx-auto bg-white p-8" onSubmit={handleSubmit}>
-            <h2 className="text-4xl font-bold text-center py-2">Вхід на сайт</h2>
+            <h2 className="text-4xl font-bold text-center py-2">Sign in</h2>
            
             <div className="flex flex-col mb-4">
               <label>Username</label>
@@ -120,13 +117,9 @@ const LoginPage = () => {
               <p className="text-center mt-8">Not a member? Sign up now</p>
             </Link>
             
+            
             <div className="flex justify-between py-8">
-              {/* <p className="border shadow-lg hover:shadow-xl px-6 py-2 relative flex items-center">
-                <AiFillFacebook className="mr-2" /> Facebook
-              </p> */}
-              <p className="border shadow-lg hover:shadow-xl px-6 py-2 relative flex items-center">
-                <FcGoogle className="mr-2" /> Google
-              </p>
+              <GoogleAuth/>
             </div>
           </form>
         </div>
