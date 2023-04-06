@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET,"/api/categories").permitAll()
                 .requestMatchers("/api/categories/**").hasAuthority(Roles.Admin)
                 .requestMatchers(HttpMethod.GET,"/api/products").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/products/{id}").permitAll()
                 .requestMatchers("/api/products/**").hasAuthority(Roles.Admin)
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
