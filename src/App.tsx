@@ -4,7 +4,6 @@ import axios from 'axios';
 import Home from './components/home';
 import { Route, Routes } from 'react-router-dom';
 import Login from './components/auth/login';
-import Registration from './components/auth/registration';
 import NotFoundPage from './components/not_found';
 import ProductCreatePage from './components/products/create/ProductCreatePage';
 import ProductListPage from './components/products/list';
@@ -14,6 +13,8 @@ import DefaultLayout from './components/containers/default/DefaultLayout';
 import AdminCategoryCreatePage from './components/admin/categories/create/AdminCategoryCreatePage';
 import AdminHome from './components/admin/home';
 import AdminLayout from './components/containers/admin/AdminLayout';
+import Registration from './components/auth/registration';
+
 const App = () => {
 
   useEffect(() => {

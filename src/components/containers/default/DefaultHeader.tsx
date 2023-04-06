@@ -285,7 +285,7 @@ const DefaultHeader = () => {
                     onClick={LogoutUser}
                     className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                   >
-                    Вихід
+                    Exit
                   </Link>
                 </>
               ) : (
@@ -296,12 +296,12 @@ const DefaultHeader = () => {
                   >
                     Sign in
                   </Link>
-                  <a
-                    href="#"
+                  <Link
+                    to="/registration"
                     className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                   >
                     Sign up
-                  </a>
+                  </Link>
                 </>
               )}
           </div>

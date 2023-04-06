@@ -113,7 +113,7 @@ const LoginPage = () => {
               <input className="mr-2" type="checkbox" />
               Remember Me
             </p>
-            <Link to="/" className="relative">
+            <Link to="/registration" className="relative">
               <p className="text-center mt-8">Not a member? Sign up now</p>
             </Link>
             
