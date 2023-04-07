@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { APP_ENV } from "../../../env";
-import ModalDelete from "../../common/modal/delete";
-import Loader from "../../Loader";
-import { IProductItem } from "../../admin/products/types";
+import { IProductItem } from "../types";
+import { APP_ENV } from "../../../../env";
+import ModalDelete from "../../../common/modal/delete";
+import Loader from "../../../Loader";
 
-const ProductListPage = () => {
+
+const AdminProductListPage = () => {
   const [list, setList] = useState<Array<IProductItem>>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,6 +62,20 @@ const ProductListPage = () => {
         </p>
       </div>
       </Link>
+      <div className="mt-2">
+        <Link
+          to={"/products/edit/" + p.id}
+          className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
+        >
+          Edit
+        </Link>
+        <ModalDelete
+          id={p.id}
+          title="Remove"
+          text={`Are you sure you want to delete product '${p.name}'?`}
+          deleteFunc={deleteProductHandler}
+        />
+      </div>
     </div>
   ));
 
@@ -74,6 +89,15 @@ const ProductListPage = () => {
               :
               <>
                 <h2 className="text-2xl font-bold text-gray-900">Product list</h2>
+                <div className="mt-2">
+                  <Link
+                    to="/products/create"
+                    className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
+                  >
+                    Add
+                  </Link>
+                </div>
+
                 <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
                   {content}
                 </div>
@@ -86,4 +110,4 @@ const ProductListPage = () => {
   );
 };
 
-export default ProductListPage;
+export default AdminProductListPage;

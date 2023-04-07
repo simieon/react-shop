@@ -33,30 +33,12 @@ const AdminCategoryCreatePage = () => {
         if(files) {
             const file = files[0];
             setModel({...model, file});
-            // const fileReader = new FileReader();
-            // fileReader.readAsDataURL(file);
-            // fileReader.onload=(readFile) => {
-            //     const result = readFile.target?.result as string;
-            //     //console.log("Read File", result);
-            //     setModel({...model, "base64": result});
-            // }
         }
         target.value="";
     }
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // let woman : IWoman = {
-        //   name: "Марина",
-        //   age: 48,
-        //   phone: "+3897 874 55 44"
-        // };
-        // console.log("Woman info ", woman);
-        // woman = {...woman, age: 34};
-        // console.log("Woman new age", woman);
-        // woman = {...woman, age: 18, name: "Ілона"};
-        // console.log("Woman new age and new name", woman);
-        
 
         try {
             const item = await http

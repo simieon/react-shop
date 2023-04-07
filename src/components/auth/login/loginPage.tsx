@@ -74,7 +74,7 @@ const LoginPage = () => {
             <h2 className="text-4xl font-bold text-center py-2">Sign in</h2>
            
             <div className="flex flex-col mb-4">
-              <label>Username</label>
+              <label>Email</label>
               <input className="border relative bg-gray-100 p-2" 
                 type="text"
                 name="email"

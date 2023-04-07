@@ -65,14 +65,6 @@ const Home = () => {
             :
             <>
               <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
-              <div className="my-4">
-                  <Link
-                    to="categories/create"
-                    className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50"
-                  >
-                    Add New Category
-                  </Link>
-                </div>
                 
               <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
               {list.map((category) => (

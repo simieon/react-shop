@@ -8,6 +8,14 @@ export interface ILogin {
     reCaptchaToken: string
 }
 
+export interface IRegister {
+    firstname:string,
+    lastname:string,
+    email: string,
+    password: string, 
+    reCaptchaToken: string
+}
+
 export enum AuthUserActionType {
     LOGIN_USER="AUTH_LOGIN_USER",
     LOGOUT_USER="AUTH_LOGOUT_USER"
@@ -25,10 +33,3 @@ export interface IAuthUser {
     user?: IUser
 }
 
-export interface IRegister {
-    firstname:string,
-    lastname:string,
-    email: string,
-    password: string, 
-    reCaptchaToken: string
-}

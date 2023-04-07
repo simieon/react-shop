@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 import { Dispatch } from "react";
-import { AuthUserActionType, IUser } from "./types";
+import { AuthUserActionType, IUser} from "./types";
 import setAuthToken from "../../helpers/SetAuthToken";
 
 

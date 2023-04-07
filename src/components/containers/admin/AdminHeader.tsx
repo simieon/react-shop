@@ -54,7 +54,7 @@ const AdminHeader = () => {
           <Link to="/admin" className="text-base font-medium text-gray-500 hover:text-white-900">
             Home
           </Link>
-          <Link to="/products/list" className="text-base font-medium text-gray-500 hover:text-white-900">
+          <Link to="/admin/products/list" className="text-base font-medium text-gray-500 hover:text-white-900">
             Products
           </Link>
 

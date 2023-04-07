@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { APP_ENV } from "../../env";
-import { IProductItem } from "../products/types";
+import { IProductItem } from "../admin/products/types";
 
 const ProductItemPage = () => {
   const { id } = useParams();

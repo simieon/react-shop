@@ -30,7 +30,7 @@ const GoogleAuth = () => {
     useEffect(() => {
         //global google
         window.google.accounts!.id.initialize({
-          client_id: "177961644023-9cdabei8f0rh9iei5jpl9dcg6tph9sjv.apps.googleusercontent.com",
+          client_id: "71849370268-o9mp92t24hr5i0hvkur1e1b6og3dpbmu.apps.googleusercontent.com",
           callback: handleGoogleLogin
         });
         window.google.accounts!.id.renderButton(document.getElementById("signInDiv"),{

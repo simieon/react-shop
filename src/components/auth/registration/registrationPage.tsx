@@ -55,11 +55,8 @@ const RegistrationPage = () => {
     
     try {
       if(!executeRecaptcha)
-        {
-            console.log("error execute captcha");
-            
             return;
-        }
+        
       //Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот  
       values.reCaptchaToken=await executeRecaptcha();
 

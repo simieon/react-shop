@@ -1,28 +1,23 @@
 import axios from "axios";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { APP_ENV } from "../../../env";
+import { ChangeEvent, Key, useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import { ICategoryItem } from "../../home/types";
-import { IProductCreate, IProductEdit, IProductItem } from "../types";
-import { FaTimes, FaTrash } from "react-icons/fa";
+import { IProductCreate } from "../types";
+import { APP_ENV } from "../../../../env";
 
-const ProductEditPage = () => {
+const AdminProductCreatePage = () => {
   const navigator = useNavigate();
 
-  const [model, setModel] = useState<IProductEdit>({
+  const [model, setModel] = useState<IProductCreate>({
     name: "",
     price: 0,
-    category_id: "",
+    category_id: 2,
     description: "",
-    removeFiles: [],
     files: [],
   });
 
-  const [oldImages, setOldImages] = useState<string[]>([]);
-
   const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
-
-  const { id } = useParams();
 
   useEffect(() => {
     axios
@@ -30,15 +25,6 @@ const ProductEditPage = () => {
       .then((resp) => {
         console.log("resp = ", resp);
         setCategories(resp.data);
-      });
-
-    axios
-      .get<IProductItem>(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
-      .then((resp) => {
-        const { files, name, price, category_id, description } = resp.data;
-        setOldImages(files);
-        setModel({ ...model, name, price, description, category_id });
-        console.log("data", resp.data);
       });
   }, []);
 
@@ -66,8 +52,8 @@ const ProductEditPage = () => {
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const item = await axios.put(
-        `${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`,
+      const item = await axios.post(
+        `${APP_ENV.REMOTE_HOST_NAME}api/products`,
         model,
         {
           headers: {
@@ -82,23 +68,20 @@ const ProductEditPage = () => {
     }
   };
 
-  const dataFileView = model.files.map((file, index) => (
+  const dataFileView = model.files.map((file: Blob | MediaSource, index: Key | null | undefined) => (
     <div key={index} className="mb-4 imageView">
       <div className="hideSection">
         <Link
-          className="text-sm"
-          to="#"
-          onClick={(e) => {
-            e.preventDefault();
-            setModel({
-              ...model,
-              files: model.files.filter((x) => x !== file),
-            });
-            console.log("click delete", file);
-          }}
-        >
-          <FaTimes className="m-2 text-3xl text-red-500" />
-        </Link>
+        className="text-sm"
+        to="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setModel({ ...model, files: model.files.filter((x) => x !== file) });
+          console.log("click delete", file);
+        }}
+      >
+        <FaTimes className="m-2 text-3xl text-red-500" />
+      </Link>
       </div>
 
       <div className="relative">
@@ -121,46 +104,10 @@ const ProductEditPage = () => {
     </option>
   ));
 
-  const DataProductsOld = oldImages.map((product, index) => (
-    <div key={index} className="mb-4 imageView">
-      <div className="hideSection">
-        <Link
-          className="text-sm"
-          to="#"
-          onClick={(e) => {
-            e.preventDefault();
-            //додаємо, щоб backend знав, що файл треба видалить
-            setModel({
-              ...model,
-              removeFiles: [...model.removeFiles, product],
-            });
-            //видаляємо файл із сторінки
-            setOldImages(oldImages.filter((x) => x !== product));
-          }}
-        >
-          <FaTimes className="m-2 text-3xl text-red-500" />
-        </Link>
-      </div>
-
-      <div className="relative">
-        <div style={{ height: "150px" }}>
-          <div className="picture-main">
-            <img
-              src={`${APP_ENV.REMOTE_HOST_NAME}files/600_${product}`}
-              className="picture-container"
-              alt=""
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  ));
-
   return (
     <>
       <div className="p-8 rounded border border-gray-200">
-        <h1 className="font-medium text-3xl">Зміна товару</h1>
-
+        <h1 className="font-medium text-3xl">Додати товар</h1>
         <form onSubmit={onSubmitHandler}>
           <div className="mt-8 grid lg:grid-cols-1 gap-4">
             <div>
@@ -206,16 +153,18 @@ const ProductEditPage = () => {
                 Оберіть категорію
               </label>
               <select
-                value={model.category_id}
                 onChange={onChangeHandler}
                 id="category_id"
                 name="category_id"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option hidden selected>
+                  Виберіть категорію
+                </option>
                 {contentCategories}
               </select>
             </div>
-            
+
             <div>
               <label
                 htmlFor="description"
@@ -235,12 +184,11 @@ const ProductEditPage = () => {
             </div>
 
             <div>
+
               <label className="block text-sm font-medium text-gray-700">
                 Фото
               </label>
-
               <div className="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 items-center gap-4">
-                {DataProductsOld}
                 {dataFileView}
               </div>
 
@@ -284,4 +232,4 @@ const ProductEditPage = () => {
   );
 };
 
-export default ProductEditPage;
+export default AdminProductCreatePage;
