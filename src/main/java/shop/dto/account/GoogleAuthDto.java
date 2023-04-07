@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class GoogleAuthDto {
     private String token;
 
+    private String recaptcha;
 }

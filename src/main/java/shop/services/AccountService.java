@@ -51,14 +51,23 @@ public class AccountService {
                 .phone("093 839 43 23")
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
-        repository.save(user);
-        var role = roleRepository.findByName(Roles.User);
-        var ur = new UserRoleEntity().builder()
-                .user(user)
-                .role(role)
-                .build();
-        userRoleRepository.save(ur);
 
+        if(repository.findByEmail(user.getEmail()).isPresent()){
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                    user.getEmail(),
+                    user.getPassword()
+            ));
+        }
+        else{
+            repository.save(user);
+            var role = roleRepository.findByName(Roles.User);
+            var ur = new UserRoleEntity().builder()
+                    .user(user)
+                    .role(role)
+                    .build();
+            userRoleRepository.save(ur);
+        }
         var jwtToken = jwtService.generateAccessToken(user);
         return AuthResponseDto.builder()
                 .token(jwtToken)

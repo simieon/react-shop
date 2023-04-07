@@ -30,6 +30,7 @@ public class AccountController {
                     .firstname("Іван")
                     .lastname("Test Google")
                     .password("0000000")
+                    .reCaptchaToken(googleAuth.getRecaptcha())
                     .build();
             return ResponseEntity.ok(service.register(request));
         } catch (Exception ex) {

@@ -18,7 +18,7 @@ import java.util.Collections;
 public class GoogleAuthService {
     private final HttpTransport transport = new NetHttpTransport();
     private final JsonFactory jsonFactory = new JacksonFactory();
-    private final String CLIENT_ID = "177961644023-9cdabei8f0rh9iei5jpl9dcg6tph9sjv.apps.googleusercontent.com";
+    private final String CLIENT_ID = "71849370268-o9mp92t24hr5i0hvkur1e1b6og3dpbmu.apps.googleusercontent.com";
 
 
     public Payload verify(String idTokenString)
