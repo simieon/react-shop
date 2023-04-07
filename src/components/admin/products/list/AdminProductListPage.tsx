@@ -64,7 +64,7 @@ const AdminProductListPage = () => {
       </Link>
       <div className="mt-2">
         <Link
-          to={"/products/edit/" + p.id}
+          to={"/admin/products/edit/" + p.id}
           className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
         >
           Edit
