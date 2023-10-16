@@ -5,19 +5,24 @@ import { useNavigate } from "react-router-dom";
 import { APP_ENV } from "../../../env";
 import { AuthUserToken } from "../action";
 import { IAuthResponse } from "../types";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const GoogleAuth = () => {
     const navigator = useNavigate();
-
+    const { executeRecaptcha } = useGoogleReCaptcha();
     const dispatch = useDispatch();
 
     const handleGoogleLogin = async (resp: any) => {
         console.log("Google resp", resp);
         const token = resp.credential;
         try {
+          if(!executeRecaptcha)
+            return;
+          //Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот  
+          const recaptcha =await executeRecaptcha();
             const resp = await axios.post<IAuthResponse>(
               `${APP_ENV.REMOTE_HOST_NAME}account/google-auth`,
-              { token }
+              { token, recaptcha } 
             );
             AuthUserToken(resp.data.token, dispatch);
             console.log("Login user token", resp);
@@ -45,3 +50,7 @@ const GoogleAuth = () => {
     );
 }
 export default GoogleAuth;
+
+function executeRecaptcha(): any {
+  throw new Error("Function not implemented.");
+}
